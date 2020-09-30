@@ -12,6 +12,12 @@ var PORT = process.env.PORT || 24000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//data
+
+var notes = [{
+
+}];
+
 // Routes
 // =============================================================
 
