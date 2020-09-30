@@ -6,7 +6,7 @@ var path = require("path");
 // Sets up the Express App
 // =============================================================
 var app = express();
-var PORT = process.env.PORT || 24000;
+var PORT = 24000;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -23,15 +23,18 @@ var notes = [{
 
 //Routes
 
-app.get("/*", function(req, res) {
-
-    res.sendFile(path.join(__dirname, "/index.html"));
-});
+app.use(express.static("public"));
 
 app.get("/notes", function(req, res) {
 
-    res.sendFile(path.join(__dirname, "/notes.html"));
+    res.sendFile(path.join(__dirname, "public/notes.html"));
 });
+
+app.get("/*", function(req, res) {
+
+    res.sendFile(path.join(__dirname, "public/index.html"));
+});
+
 
 app.get("/api/notes", function(req, res) {
 
@@ -65,15 +68,17 @@ app.listen(PORT, function() {
 
 // Functions 
 
-const creatNote = $newNoteBtn => {
+const creatNote = newNotes => {
 
 };
 
-const saveNote = $saveNoteBtn => {
+const saveNote = saveNotes => {
 
 };
 
 
-const deleteNote = $delBtn => {
+const deleteNote = deleteNotes => {
 
 };
+
+//server maps
