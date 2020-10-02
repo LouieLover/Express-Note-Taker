@@ -3,15 +3,17 @@
 var express = require("express");
 var path = require("path");
 const { fstat } = require("fs");
-var Db = ("db/db.json");
-var fs = require("fs");
+var Db = require("./db/db.json");
+let fs = require("fs");
 const bodyParser = require('body-parser');
+const { get } = require("http");
+const { writeFileSync } = require("fs");
 
 
 // Sets up the Express App
 // =============================================================
 var app = express();
-var PORT = process.env.PORT || 4000;
+var PORT = process.env.PORT || 3000;
 
 
 
@@ -20,15 +22,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('/public'));
+app.set("view engine", "./db/db.json");
 
 //data
-
-const notes = [{
-    id: '',
-    body: ''
-
-}];
-
+let note = [{ "title": "Test Title", "text": "Test text" }];
 
 // Routes
 // =============================================================
@@ -36,11 +33,33 @@ const notes = [{
 //Routes
 
 app.use(express.static("public"));
+app.use(express.static(".db/db.json"));
+
 
 //notes section
 app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
 
+});
+
+app.get("/api/notes", function(req, res) {
+    fs.writeFile("./db/db.json", ("utf-8"), (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.json({
+                error: true,
+                data: null,
+                message: "no notes"
+            });
+        }
+        res.json(JSON.parse("updatedData"));
+        res.render("updatedData");
+        updatedData.push(req.body);
+    });
+    res.sendFile(path.join(__dirname, "public/api/notes.html"));
+    res.render(".db/db.json", {
+        note: note
+    });
 });
 
 app.get("/*", function(req, res) {
@@ -50,12 +69,23 @@ app.get("/*", function(req, res) {
 
 
 app.post("/api/notes", function(req, res) {
-    console.log(req.body);
-    fs.readFile("./notes.json", "utf8", (err, data) => {
+    fs.readFile("./db/db.json", "utf8", (err, data) => {
+        if (err) throw err;
         console.log(data);
-        const notes = JSON.parse(data);
-        notes.forEach(req.body);
-        console.log(notes);
+        const updatedData = (data);
+        console.log(data);
+        fs.writeFile("./db/db.json", JSON.stringify(data), (err) => {
+            if (err) throw err;
+            res.json({
+                error: true,
+                data: null,
+                message: "add new note"
+            });
+            updatedData.push(req.body);
+            console.log(updatedData);
+        });
+
+        res.sendFile(path.join(__dirname, "public/notes.html"));
     });
 });
 
