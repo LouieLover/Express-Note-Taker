@@ -51,8 +51,7 @@ app.get("/*", function(req, res) {
 
 app.post("/api/notes", function(req, res) {
     console.log(req.body);
-    fs.readFile("./notes", "utf8", (err, data) => {
-        if (err) throw err;
+    fs.readFile("./notes.json", "utf8", (err, data) => {
         console.log(data);
         const notes = JSON.parse(data);
         notes.forEach(req.body);
